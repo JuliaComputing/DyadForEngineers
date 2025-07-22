@@ -1,0 +1,14 @@
+component SimpleMSD_Dyad
+  parameter F::Real = 100
+  parameter d::Real = 1
+  parameter k::Real = 1000
+
+  variable x::Real
+  variable x_dot::Real
+relations
+  initial x = 0
+  initial x_dot = F/d
+  der(x) = x_dot
+  d*x_dot + k*x = F
+end
+

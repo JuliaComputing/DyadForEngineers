@@ -1,0 +1,34 @@
+component CarSystem
+  wheel = MassSpringDamper0(m=wheel_mass, d=wheel_damping, c=wheel_stiffness, g=-10, theta=pi/2, s0=wheel_initial_position)
+  car_and_suspension = MassSpringDamper0(m=car_mass, d=suspension_damping, c=suspension_stiffness, g=-10, theta=pi/2, s0=suspension_initial_position)
+  seat = MassSpringDamper0(m=human_and_seat_mass, d=seat_damping, c=seat_stiffness, g=-10, theta=pi/2, s0=seat_initial_position)
+  road_data = RoadData()
+  road = SimplePosition()
+  seat_pos = TranslationalComponents.PositionSensor() 
+  parameter wheel_mass::Dyad.Mass = 25
+  parameter wheel_stiffness::TranslationalSpringConstant = 1e2
+  parameter wheel_damping::DampingCoefficient = 1e4
+  parameter car_mass::Dyad.Mass = 1000
+  parameter suspension_stiffness::TranslationalSpringConstant = 1e4
+  parameter suspension_damping::DampingCoefficient = 10
+  parameter human_and_seat_mass::Dyad.Mass = 100
+  parameter seat_stiffness::TranslationalSpringConstant = 1000
+  parameter seat_damping::DampingCoefficient = 1
+  parameter wheel_initial_position::Dyad.Position = 0.5
+  parameter suspension_initial_position::Dyad.Position = 1
+  parameter seat_initial_position::Dyad.Position = 1.5
+  parameter kd::Real = 20
+  parameter ki::Real = 0.2
+  parameter kp::Real = 1
+relations 
+  connect(road.s, road_data.y)
+  connect(road.flange, wheel.flange_sd)
+  connect(wheel.flange_m, car_and_suspension.flange_sd)
+  connect(car_and_suspension.flange_m, seat.flange_sd) 
+  connect(seat.flange_m, seat_pos.flange) 
+end
+
+analysis SimCarSystem
+  extends TransientAnalysis(stop=10, abstol=1m, reltol=1m)
+  model = CarSystem()
+end 

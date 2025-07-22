@@ -1,0 +1,21 @@
+component RoadData
+    parameter bump::Real = 0.2
+    parameter freq::Real = 0.5
+    parameter offset::Real = 0.4
+    parameter loop::Real = 10
+
+    y = RealOutput()
+relations
+    y = ifelse((time % loop) < offset, 0.0, ifelse((time % loop) - offset > freq, 0.0, (bump*(1 - cos(2*pi*(time-offset)/freq)))))
+end 
+
+component SimplePosition
+  s = RealInput()
+  flange = Flange()
+  variable a::Acceleration
+  variable v::Velocity
+relations
+  v = der(s)
+  a = der(v)
+  flange.s = s
+end

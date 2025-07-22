@@ -1,0 +1,28 @@
+component MassSpringDamper
+  mass = TranslationalComponents.Mass(m=m, L=0.0, g=g, theta=theta) 
+  spring_damper = TranslationalComponents.SpringDamper(d=d, c=c)
+  flange_m = Flange() 
+  flange_sd = Flange()
+  # Component mass
+  parameter m::Dyad.Mass
+  # Stiffness of the spring
+  parameter c::TranslationalSpringConstant
+  # Damping coefficient
+  parameter d::DampingCoefficient
+  # Gravity
+  parameter g::Acceleration
+  # Initial position
+  parameter s0::Dyad.Position
+  # Initial velocity
+  parameter v0::Velocity = 0
+  # Initial acceleration
+  parameter a0::Acceleration = 0
+  # Angle of motion with +X axis
+  parameter theta::Angle = 0
+relations
+  initial mass.s = s0
+  initial mass.v = v0
+  initial mass.a = a0
+  connect(flange_m, mass.flange_b, spring_damper.flange_a) 
+  connect(spring_damper.flange_b, flange_sd) 
+end
