@@ -9,13 +9,16 @@ using Plots
 #######################################################
 ###### Problem 1.1: Solving MSD with Julia ######
 
-d = 1
-k = 1000
-Δt = 1e-3
-F = 100
+Δt = 1e-3   # step size
+d = 1       # damping coefficient
+k = 1000    # spring coefficient
+F = 100     # external force
 
 x = zeros(10)
 
+# xᵢ: guess for the position at next timestep
+# xᵢ₋₁: position at current timestep
+# f returns 0 iff xᵢ and xᵢ₋₁ are part of the same solution
 function f(xᵢ, xᵢ₋₁)
 
     ẋᵢ = (xᵢ - xᵢ₋₁)/Δt     # finite difference derivative
@@ -47,12 +50,13 @@ plot(x, xlabel="time", ylabel="x")
 #######################################################
 ###### Problem 1.2: Solving MSD with MTK ######
 
-typeof(t)
-typeof(D)
-sin(t)
-D(sin(t))
+# typeof(t)
+# sin(t)
+# typeof(sin(t))
 
-D(sin(t)) |> expand_derivatives
+# typeof(D)
+# D(sin(t))
+# D(sin(t)) |> expand_derivatives
 
 @mtkmodel SimpleMSD_MTK begin
     @parameters begin
@@ -64,35 +68,28 @@ D(sin(t)) |> expand_derivatives
         x(t) = 0.0
         ẋ(t) = F/d
     end
-    @components begin
-        
-    end
     @equations begin
-        D(x) ~ ẋ
         d*ẋ + k*x ~ F
+        D(x) ~ ẋ
     end
 end
 
 @mtkbuild msd_mtk = SimpleMSD_MTK()
 
-# unknowns(odesys)
-# observed(odesys)
-# equations(odesys)
-# full_equations(odesys)
+# unknowns(msd_mtk)
+# observed(msd_mtk)
+# equations(msd_mtk)
+# full_equations(msd_mtk)
 
-u0 = []     # <-- used to override defaults of ODESystem variables
-p = []      # <-- used to override defaults of ODESystem parameters
-tspan = (0.0, 0.01) # solution time span
-
-prob1 = ODEProblem(msd_mtk, u0, tspan, p)
+prob1 = ODEProblem(msd_mtk, [], (0.0, 0.01), [])
 sol1 = solve(prob1)
 
 plot(sol1; idxs=[msd_mtk.x], xlabel="time", ylabel="x")
 plot(sol1; idxs=[msd_mtk.ẋ], xlabel="time", ylabel="ẋ")
 
-plot(sol1; idxs=[msd_mtk.x*msd_mtk.k], label="spring force", xlabel="time", ylabel="force")     # spring force
-plot!(sol1; idxs=[msd_mtk.ẋ*msd_mtk.d], label="damping force")        # damping force  
-plot!(sol1; idxs=[msd_mtk.x*msd_mtk.k + msd_mtk.ẋ*msd_mtk.d], label="spring + damping force")  
+plot(sol1; idxs=[msd_mtk.x * msd_mtk.k], label="spring force", xlabel="time", ylabel="force")     # spring force
+plot!(sol1; idxs=[msd_mtk.ẋ * msd_mtk.d], label="damping force")        # damping force  
+plot!(sol1; idxs=[(msd_mtk.x * msd_mtk.k) + (msd_mtk.ẋ * msd_mtk.d)], label="spring + damping force")  
 
 
 #######################################################

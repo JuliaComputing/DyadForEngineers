@@ -2,9 +2,9 @@ component CarSuspension
   wheel = MassSpringDamper(m=wheel_mass, d=wheel_damping, c=wheel_stiffness, g=-10, theta=pi/2, s0=wheel_initial_position)
   car_and_suspension = MassSpringDamper(m=car_mass, d=suspension_damping, c=suspension_stiffness, g=-10, theta=pi/2, s0=suspension_initial_position) 
   seat = MassSpringDamper(m=human_and_seat_mass, d=seat_damping, c=seat_stiffness, g=-10, theta=pi/2, s0=seat_initial_position) 
+  
   road_data = RoadData()
   road = SimplePosition() 
-  seat_pos = TranslationalComponents.PositionSensor()
 
   parameter wheel_mass::Dyad.Mass = 25
   parameter wheel_stiffness::TranslationalSpringConstant = 1e2
@@ -26,7 +26,6 @@ relations
   connect(road.flange, wheel.flange_sd) 
   connect(wheel.flange_m, car_and_suspension.flange_sd)
   connect(car_and_suspension.flange_m, seat.flange_sd) 
-  connect(seat.flange_m, seat_pos.flange) 
 end
 
 analysis CarSuspensionTransient
