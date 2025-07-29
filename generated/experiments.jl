@@ -6,7 +6,6 @@
 
 
 include("CarSuspension_experiment.jl")
-include("Hello_experiment.jl")
 include("MassSpringDamper_experiment.jl")
 include("RoadData_experiment.jl")
 include("SimplePosition_experiment.jl")

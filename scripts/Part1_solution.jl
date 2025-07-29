@@ -6,6 +6,7 @@ using ModelingToolkit: t_nounits as t, D_nounits as D
 using DifferentialEquations
 using Plots
 
+
 #######################################################
 ###### Problem 1.1: Solving MSD with Julia ######
 
@@ -46,6 +47,7 @@ for i=2:10
 end
 
 plot(x, xlabel="time", ylabel="x")
+
 
 #######################################################
 ###### Problem 1.2: Solving MSD with MTK ######

@@ -13,7 +13,6 @@ RuntimeGeneratedFunctions.init(@__MODULE__)
 
 
 include("CarSuspension_test.jl")
-include("Hello_test.jl")
 include("MassSpringDamper_test.jl")
 include("RoadData_test.jl")
 include("SimplePosition_test.jl")
